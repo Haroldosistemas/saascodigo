@@ -1,4 +1,4 @@
-import { proto, WASocket } from "@whiskeysockets/baileys";
+import { AnyWASocket, proto } from "@adiwajshing/baileys";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import { Store } from "../../libs/store";
@@ -16,7 +16,7 @@ import Chatbot from "../../models/Chatbot";
 import User from "../../models/User";
 import Setting from "../../models/Setting";
 
-type Session = WASocket & {
+type Session = AnyWASocket & {
   id?: number;
   store?: Store;
 };
@@ -68,6 +68,7 @@ const sendDialog = async (
 ) => {
   const showChatBots = await ShowChatBotServices(choosenQueue.id);
   if (showChatBots.options) {
+
     const buttonActive = await Setting.findOne({
       where: {
         key: "chatBotType"
@@ -108,26 +109,28 @@ const sendDialog = async (
       });
 
       if (buttons.length > 0) {
-        const buttonMessage = {
-          text: `\u200e${choosenQueue.greetingMessage}`,
-          buttons,
-          headerType: 1
-        };
 
-        const send = await wbot.sendMessage(
-          `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-          buttonMessage
-        );
+      const buttonMessage = {
+        text: `\u200e${choosenQueue.greetingMessage}`,
+        buttons,
+        headerType: 1
+      };
 
-        await verifyMessage(send, ticket, contact);
+      const send = await wbot.sendMessage(
+        `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+        buttonMessage
+      );
 
-        return send;
+      await verifyMessage(send, ticket, contact);
+
+      return send;
       }
 
       const body = `\u200e${choosenQueue.greetingMessage}`;
       const send = await sendMessage(wbot, contact, ticket, body);
 
       return send;
+
     };
 
     const botList = async () => {
@@ -170,19 +173,19 @@ const sendDialog = async (
     };
 
     if (buttonActive.value === "text") {
-      return botText();
+      return await botText();
     }
 
     if (buttonActive.value === "button" && showChatBots.options.length > 4) {
-      return botText();
+      return await botText();
     }
 
     if (buttonActive.value === "button" && showChatBots.options.length <= 4) {
-      return botButton();
+      return await botButton();
     }
 
     if (buttonActive.value === "list") {
-      return botList();
+      return await botList();
     }
   }
 };
@@ -280,19 +283,19 @@ const backToMainMenu = async (
   };
 
   if (buttonActive.value === "text") {
-    return botText();
+    return await botText();
   }
 
   if (buttonActive.value === "button" && queues.length > 4) {
-    return botText();
+    return await botText();
   }
 
   if (buttonActive.value === "button" && queues.length <= 4) {
-    return botButton();
+    return await botButton();
   }
 
   if (buttonActive.value === "list") {
-    return botList();
+    return await botList();
   }
 };
 
@@ -308,7 +311,8 @@ export const sayChatbot = async (
     msg?.message?.listResponseMessage?.singleSelectReply.selectedRowId ||
     getBodyMessage(msg);
 
-  console.log("Selecionado a opção: ", selectedOption);
+
+    console.log('Selecionado a opção: ', selectedOption);
 
   if (!queueId && selectedOption && msg.key.fromMe) return;
 
@@ -322,13 +326,13 @@ export const sayChatbot = async (
   if (!getStageBot) {
     const queue = await ShowQueueService(queueId);
 
-    const selectedOptions =
-      msg?.message?.buttonsResponseMessage?.selectedButtonId ||
-      msg?.message?.listResponseMessage?.singleSelectReply.selectedRowId ||
+    const selectedOption =
+    msg?.message?.buttonsResponseMessage?.selectedButtonId ||
+    msg?.message?.listResponseMessage?.singleSelectReply.selectedRowId ||
       getBodyMessage(msg);
 
-    console.log("!getStageBot", selectedOptions);
-    const choosenQueue = queue.chatbots[+selectedOptions - 1];
+     console.log("!getStageBot", selectedOption);
+    const choosenQueue = queue.chatbots[+selectedOption - 1];
 
     if (!choosenQueue?.greetingMessage) {
       await DeleteDialogChatBotsServices(contact.id);
@@ -369,7 +373,7 @@ export const sayChatbot = async (
       ? bots.options[+selected - 1]
       : bots.options[0];
 
-    console.log("choosenQueue", choosenQueue);
+      console.log("choosenQueue", choosenQueue);
 
     if (!choosenQueue.greetingMessage) {
       await DeleteDialogChatBotsServices(contact.id);

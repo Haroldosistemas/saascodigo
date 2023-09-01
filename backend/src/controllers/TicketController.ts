@@ -75,12 +75,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const { contactId, status, userId, queueId }: TicketData = req.body;
 
-  const ticket = await CreateTicketService({
-    contactId,
-    status,
-    userId,
-    queueId
-  });
+  const ticket = await CreateTicketService({ contactId, status, userId, queueId });
 
   const io = getIO();
   io.to(ticket.status).emit("ticket", {
@@ -119,12 +114,17 @@ export const update = async (
     const { farewellMessage } = whatsapp;
 
     if (farewellMessage) {
-      await SendWhatsAppMessage({
-        body: farewellMessage,
-        ticket
-      });
-    }
-  }
+
+      var str = farewellMessage;
+      var newstr = str.replace('{TICKET}', `${ticket.id}`);
+      newstr = newstr.replace('{CLIENTE}', ticket.contact.name);
+
+        await SendWhatsAppMessage({
+         body: newstr,
+         ticket
+       });
+     }
+   }
 
   return res.status(200).json(ticket);
 };

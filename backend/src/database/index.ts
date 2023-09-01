@@ -1,6 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
 import Baileys from "../models/Baileys";
-import BaileysSessions from "../models/BaileysSessions";
 import Chatbot from "../models/Chatbot";
 import Contact from "../models/Contact";
 import ContactCustomField from "../models/ContactCustomField";
@@ -45,7 +44,6 @@ const models = [
   TicketTag,
   SettingMessage,
   MassMessages,
-  BaileysSessions
 ];
 
 sequelize.addModels(models);

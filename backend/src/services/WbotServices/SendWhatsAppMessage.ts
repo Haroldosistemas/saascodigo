@@ -1,4 +1,4 @@
-import { WAMessage } from "@whiskeysockets/baileys";
+import { WALegacySocket, WAMessage } from "@adiwajshing/baileys";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
 import Message from "../../models/Message";
@@ -23,22 +23,35 @@ const SendWhatsAppMessage = async ({
     ticket.isGroup ? "g.us" : "s.whatsapp.net"
   }`;
   if (quotedMsg) {
-    const chatMessages = await Message.findOne({
-      where: {
-        id: quotedMsg.id
-      }
-    });
+    if (wbot.type === "legacy") {
+      const chatMessages = await (wbot as WALegacySocket).loadMessageFromWA(
+        number,
+        quotedMsg.id
+      );
 
-    const msgFound = JSON.parse(JSON.stringify(chatMessages.dataJson));
+      options = {
+        quoted: chatMessages
+      };
+    }
 
-    options = {
-      quoted: {
-        key: msgFound.key,
-        message: {
-          extendedTextMessage: msgFound.message.extendedTextMessage
+    if (wbot.type === "md") {
+      const chatMessages = await Message.findOne({
+        where: {
+          id: quotedMsg.id
         }
-      }
-    };
+      });
+
+      const msgFound = JSON.parse(JSON.stringify(chatMessages.dataJson));
+
+      options = {
+        quoted: {
+          key: msgFound.key,
+          message: {
+            extendedTextMessage: msgFound.message.extendedTextMessage
+          }
+        }
+      };
+    }
   }
 
   try {

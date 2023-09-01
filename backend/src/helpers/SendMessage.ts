@@ -1,12 +1,9 @@
-import mime from "mime-types";
-import fs from "fs";
-import { AnyMessageContent } from "@whiskeysockets/baileys";
 import Whatsapp from "../models/Whatsapp";
 import GetWhatsappWbot from "./GetWhatsappWbot";
-import SendWhatsAppMedia, {
-  processAudio,
-  processAudioFile
-} from "../services/WbotServices/SendWhatsAppMedia";
+import SendWhatsAppMedia, { processAudio, processAudioFile } from "../services/WbotServices/SendWhatsAppMedia";
+import mime from "mime-types";
+import fs from "fs";
+import { AnyMessageContent } from "@adiwajshing/baileys";
 
 export type MessageData = {
   number: number | string;
@@ -25,12 +22,13 @@ export const SendMessage = async (
     const body = `\u200e${messageData.body}`;
     console.log("envio de mensagem");
     if (messageData.mediaPath) {
+
       const media = {
         path: messageData.mediaPath,
         mimetype: mime.lookup(messageData.mediaPath)
       } as Express.Multer.File;
 
-      console.log(media);
+      console.log(media)
       const pathMedia = messageData.mediaPath;
       const typeMessage = media.mimetype.split("/")[0];
       let options: AnyMessageContent;
@@ -79,9 +77,12 @@ export const SendMessage = async (
         };
       }
 
-      message = await wbot.sendMessage(jid, {
-        ...options
-      });
+       message = await wbot.sendMessage(
+        jid,
+        {
+          ...options
+        }
+      );
 
       console.log(message);
     } else {
@@ -93,7 +94,7 @@ export const SendMessage = async (
 
     return message;
   } catch (err: any) {
-    console.log(err);
+    console.log(err)
     throw new Error(err);
   }
 };

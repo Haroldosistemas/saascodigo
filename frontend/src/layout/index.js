@@ -23,6 +23,7 @@ import NotificationsPopOver from "../components/NotificationsPopOver";
 import UserModal from "../components/UserModal";
 import { AuthContext } from "../context/Auth/AuthContext";
 import BackdropLoading from "../components/BackdropLoading";
+import logodash from "../assets/logo-dash.png";
 import { i18n } from "../translate/i18n";
 
 const drawerWidth = 240;
@@ -177,6 +178,7 @@ const LoggedInLayout = ({ children }) => {
         open={drawerOpen}
       >
         <div className={classes.toolbarIcon}>
+		<img src={logodash} alt="logo" />
           <IconButton onClick={() => setDrawerOpen(!drawerOpen)}>
             <ChevronLeftIcon />
           </IconButton>
@@ -217,7 +219,7 @@ const LoggedInLayout = ({ children }) => {
             noWrap
             className={classes.title}
           >
-            WhaTicket
+            <center>STOPZAP | MULTIATENDIMENTO</center>
           </Typography>
           {user.id && <NotificationsPopOver />}
 

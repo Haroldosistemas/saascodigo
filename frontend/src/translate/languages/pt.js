@@ -28,6 +28,10 @@ const messages = {
           register: "Não tem um conta? Cadastre-se!",
         },
       },
+      copyright: {
+        title: "Whaticket",
+      },
+
       auth: {
         toasts: {
           success: "Login efetuado com sucesso!",
@@ -320,14 +324,21 @@ const messages = {
         listItems: {
           dashboard: "Dashboard",
           connections: "Conexões",
-          tickets: "Tickets",
+          tickets: "Conversas",
           contacts: "Contatos",
           quickAnswers: "Respostas Rápidas",
           queues: "Filas & Chatbot",
           schedules: "Agendamentos",
           tags: "Tags",
+          api: "API",
+          gerenciarcampanha: "Campanhas",
+          configcampanha: "Config. Campanhas",
+          relatoriocampanha: "Relatório Envios",
+          enviocampanha: "Envio em Massa",
           administration: "Administração",
           users: "Usuários",
+          docs: "Documentação",
+          tokens: "Tokens",
           settings: "Configurações",
         },
         appBar: {

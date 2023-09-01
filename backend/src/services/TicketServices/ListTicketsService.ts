@@ -1,15 +1,15 @@
-import { endOfDay, parseISO, startOfDay } from "date-fns";
-import { intersection } from "lodash";
-import { col, Filterable, fn, Includeable, Op, where } from "sequelize";
+import { Op, fn, where, col, Filterable, Includeable } from "sequelize";
+import { startOfDay, endOfDay, parseISO } from "date-fns";
+
+import Ticket from "../../models/Ticket";
 import Contact from "../../models/Contact";
 import Message from "../../models/Message";
 import Queue from "../../models/Queue";
+import ShowUserService from "../UserServices/ShowUserService";
 import Tag from "../../models/Tag";
-import Ticket from "../../models/Ticket";
+import { intersection } from "lodash";
 import TicketTag from "../../models/TicketTag";
 import Whatsapp from "../../models/Whatsapp";
-import ShowUserService from "../UserServices/ShowUserService";
-
 
 interface Request {
   searchParam?: string;

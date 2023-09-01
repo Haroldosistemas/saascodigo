@@ -116,8 +116,9 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
     greetingMessage: "",
     farewellMessage: "",
     isDefault: false,
-    isMultidevice: true,
-    transferTicketMessage: "",
+    isMultidevice: false,
+    		transferTicketMessage: "",
+
   };
   const [whatsApp, setWhatsApp] = useState(initialState);
   const [selectedQueueIds, setSelectedQueueIds] = useState([]);
@@ -193,23 +194,20 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
   };
 
   const handleSaveWhatsApp = async (values) => {
-    const whatsappData = {
-      ...values,
-      queueIds: selectedQueueIds,
-      startWorkHour: startWorkHour,
-      endWorkHour: endWorkHour,
-      defineWorkHours: defineWorkHours,
-      outOfWorkMessage: outOfWorkMessage,
-      startWorkHourWeekend: startWorkHourWeekend,
-      endWorkHourWeekend: endWorkHourWeekend,
-      monday: seg,
-      tuesday: ter,
-      wednesday: quar,
-      thursday: quin,
-      friday: sex,
-      saturday: sab,
-      sunday: dom,
-    };
+    const whatsappData = { ...values, queueIds: selectedQueueIds, 	startWorkHour: startWorkHour,
+			endWorkHour: endWorkHour,
+			defineWorkHours: defineWorkHours,
+			outOfWorkMessage: outOfWorkMessage,
+			startWorkHourWeekend: startWorkHourWeekend,
+			endWorkHourWeekend: endWorkHourWeekend,
+			monday: seg,
+			tuesday: ter,
+			wednesday: quar,
+			thursday: quin,
+			friday: sex,
+			saturday: sab,
+			sunday: dom, 
+     };
 
     try {
       if (whatsAppId) {
@@ -281,7 +279,17 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
                     label={i18n.t("whatsappModal.form.default")}
                   />
 
-              
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Switch}
+                        color="primary"
+                        name="isMultidevice"
+                        checked={values.isMultidevice}
+                      />
+                    }
+                    label={i18n.t("whatsappModal.form.isMultidevice")}
+                  />
                 </div>
                 <div>
                   <Field
@@ -325,7 +333,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
                 <div>
                   <Field
                     as={TextField}
-                    label="Mensagem de trasnferencia de atendimento"
+                    label="Mensagem de transferencia de atendimento"
                     type="transferTicketMessage"
                     multiline
                     rows={5}
@@ -363,10 +371,12 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
                           Boolean(errors.outOfWorkMessage)
                         }
                         helperText={
-                          touched.outOfWorkMessage && errors.outOfWorkMessage
+                          touched.outOfWorkMessage &&
+                          errors.outOfWorkMessage
                         }
                         variant="outlined"
-                        margin="dense"
+                        margin="dense"                       
+                        
                         onChange={(e) => setOutOfWorkMessage(e.target.value)}
                       />
                     </div>
